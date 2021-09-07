@@ -1,20 +1,24 @@
 package senchabackend.controller;
 
-import senchabackend.entity.PersonnelEntity;
-import senchabackend.entity.UserEntity;
-import senchabackend.model.ResultsResponse;
-import senchabackend.repository.PersonnelRepository;
-import senchabackend.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import senchabackend.entity.PersonnelEntity;
+import senchabackend.entity.UserEntity;
+import senchabackend.model.ResultsResponse;
+import senchabackend.model.SortParam;
+import senchabackend.repository.PersonnelRepository;
+import senchabackend.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -44,10 +48,30 @@ public class CommonController {
     }
 
     @GetMapping(value = "/personnel")
-    public ResultsResponse<PersonnelEntity> getPersonnel() {
-        List<PersonnelEntity> personnelList = personnelRepository.findAll();
+    public ResultsResponse<PersonnelEntity> getPersonnel(@RequestParam Integer page,
+                                                         @RequestParam Integer limit,
+                                                         @RequestParam(required = false) String sort) throws JsonProcessingException {
+        System.out.println("Page: " + page);
+        System.out.println("Limit: " + limit);
+        System.out.println("Sort: " + sort);
+
+        List<SortParam> sortParamList = new ArrayList<>();
+        if (sort != null) {
+            sortParamList = Arrays.asList(objectMapper.readValue(sort, SortParam[].class));
+        }
+
+        List<Sort.Order> orders = new ArrayList<>();
+        for (SortParam sortParam : sortParamList) {
+            Sort.Order order = new Sort.Order(Sort.Direction.fromString(sortParam.direction), sortParam.property);
+            orders.add(order);
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(orders));
+
+        List<PersonnelEntity> personnelList = personnelRepository.findAll(pageable);
         ResultsResponse<PersonnelEntity> resultsResponse = new ResultsResponse<>();
         resultsResponse.getResults().addAll(personnelList);
+        resultsResponse.setCount(personnelRepository.count());
         return resultsResponse;
     }
 

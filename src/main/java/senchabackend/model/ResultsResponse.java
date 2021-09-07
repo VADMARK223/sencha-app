@@ -12,4 +12,5 @@ import java.util.List;
 @Data
 public class ResultsResponse<T> {
     private List<T> results = new ArrayList<>();
+    private Long count;
 }
