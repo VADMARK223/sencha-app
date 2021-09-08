@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import senchabackend.entity.PersonnelEntity;
 import senchabackend.entity.UserEntity;
 import senchabackend.model.ResultsResponse;
@@ -97,13 +98,14 @@ public class CommonController {
         Optional<PersonnelEntity> targetOptional = personnelRepository.findById(source.id);
         if (!targetOptional.isPresent()) {
             System.err.println("Error: User (" + source.id + ") not exists!");
-            return new ResponseEntity<>("User (" + source.id + ") not exists!", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User (" + source.id + ") not exists!");
         }
         PersonnelEntity target = targetOptional.get();
         BeanUtils.copyProperties(source, target, getNullProperties(source));
         personnelRepository.save(target);
 
-        return ResponseEntity.ok().build();
+//        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
