@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
+ * Сущность сотрудника
  * @author Markitanov Vadim
  * @since 07.09.2021
  */
@@ -19,9 +20,6 @@ public class PersonnelEntity {
     @GeneratedValue
     @Column(name = "id")
     public Long id;
-
-    @Column(name = "name")
-    public String name;
 
     @Column(name = "email")
     public String email;
@@ -34,4 +32,19 @@ public class PersonnelEntity {
 
     @Column(name = "salary")
     public BigDecimal salary;
+
+    @Column(name = "firstname")
+    public String firstname;
+
+    @Column(name = "lastname")
+    public String lastname;
+
+    @Column(name = "patronymic")
+    public String patronymic;
+
+    @Column(name = "actual")
+    public Boolean actual;
+
+    @Column(name = "position")
+    public String position;
 }

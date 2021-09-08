@@ -2,9 +2,11 @@ package senchabackend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,8 @@ import senchabackend.model.SortParam;
 import senchabackend.repository.PersonnelRepository;
 import senchabackend.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.beans.PropertyDescriptor;
+import java.util.*;
 
 @RestController
 public class CommonController {
@@ -31,6 +32,22 @@ public class CommonController {
 
     @Autowired
     PersonnelRepository personnelRepository;
+
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<String> getAuthenticate(@RequestBody MultiValueMap<String, String> multiValueMap) {
+        UserEntity user = userRepository.findAllByUsernameAndPassword(multiValueMap.get("username").get(0), multiValueMap.get("password").get(0));
+
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        if (user != null) {
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>("User not valid!", HttpStatus.UNAUTHORIZED);
+    }
 
     @GetMapping(value = "/user")
     public ResultsResponse<UserEntity> getUsers() {
@@ -66,9 +83,7 @@ public class CommonController {
             orders.add(order);
         }
 
-        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(orders));
-
-        List<PersonnelEntity> personnelList = personnelRepository.findAll(pageable);
+        List<PersonnelEntity> personnelList = personnelRepository.findAll(PageRequest.of(page - 1, limit, Sort.by(orders)));
         ResultsResponse<PersonnelEntity> resultsResponse = new ResultsResponse<>();
         resultsResponse.getResults().addAll(personnelList);
         resultsResponse.setCount(personnelRepository.count());
@@ -76,23 +91,36 @@ public class CommonController {
     }
 
     @PostMapping(value = "/personnel")
-    public void postPersonnel() {
-        System.out.println("Post personnel.");
+    public ResponseEntity<String> postPersonnel(@RequestBody PersonnelEntity source) {
+//        source.id = 99999L;
+
+        Optional<PersonnelEntity> targetOptional = personnelRepository.findById(source.id);
+        if (!targetOptional.isPresent()) {
+            System.err.println("Error: User (" + source.id + ") not exists!");
+            return new ResponseEntity<>("User (" + source.id + ") not exists!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        PersonnelEntity target = targetOptional.get();
+        BeanUtils.copyProperties(source, target, getNullProperties(source));
+        personnelRepository.save(target);
+
+        return ResponseEntity.ok().build();
+
     }
 
-    @PostMapping(value = "/authenticate")
-    public ResponseEntity<String> getAuthenticate(@RequestBody MultiValueMap<String, String> multiValueMap) {
-        UserEntity user = userRepository.findAllByUsernameAndPassword(multiValueMap.get("username").get(0), multiValueMap.get("password").get(0));
+    private String[] getNullProperties(PersonnelEntity source) {
+        final BeanWrapper beanWrapper = new BeanWrapperImpl(source);
+        PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
 
-//        try {
-//            Thread.sleep(3000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-        if (user != null) {
-            return ResponseEntity.ok().build();
+        Set<String> emptyNames = new HashSet<>();
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+            String propertyName = propertyDescriptor.getName();
+            Object propertyValue = beanWrapper.getPropertyValue(propertyName);
+            if (propertyValue == null) {
+                emptyNames.add(propertyName);
+            }
         }
-        return new ResponseEntity<>("User not valid!", HttpStatus.UNAUTHORIZED);
+
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 }
