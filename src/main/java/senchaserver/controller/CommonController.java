@@ -20,6 +20,7 @@ import senchaserver.model.SortParam;
 import senchaserver.repository.PersonnelRepository;
 import senchaserver.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.beans.PropertyDescriptor;
 import java.util.*;
 
@@ -50,6 +51,7 @@ public class CommonController {
         return new ResponseEntity<>("User not valid!", HttpStatus.UNAUTHORIZED);
     }
 
+    @Transactional
     @GetMapping(value = "/user")
     public ResultsResponse<UserEntity> getUsers() {
         List<UserEntity> users = userRepository.findAll();
