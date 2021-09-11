@@ -6,8 +6,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import senchaserver.entity.PersonnelEntity;
 import senchaserver.entity.UserEntity;
+import senchaserver.model.FilterParam;
 import senchaserver.model.ResultsResponse;
 import senchaserver.model.SortParam;
 import senchaserver.repository.PersonnelRepository;
 import senchaserver.repository.UserRepository;
+import senchaserver.specification.PersonnelSpecification;
 
 import javax.transaction.Transactional;
 import java.beans.PropertyDescriptor;
@@ -26,24 +30,13 @@ import java.util.*;
 
 @RestController
 public class CommonController {
-    @Autowired
-    public ObjectMapper objectMapper;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PersonnelRepository personnelRepository;
+    private ObjectMapper objectMapper;
+    private UserRepository userRepository;
+    private PersonnelRepository personnelRepository;
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<String> getAuthenticate(@RequestBody MultiValueMap<String, String> multiValueMap) {
         UserEntity user = userRepository.findAllByUsernameAndPassword(multiValueMap.get("username").get(0), multiValueMap.get("password").get(0));
-
-//        try {
-//            Thread.sleep(3000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
 
         if (user != null) {
             return ResponseEntity.ok().build();
@@ -70,11 +63,14 @@ public class CommonController {
     @GetMapping(value = "/personnel")
     public ResultsResponse<PersonnelEntity> getPersonnel(@RequestParam Integer page,
                                                          @RequestParam Integer limit,
-                                                         @RequestParam(required = false) String sort) throws JsonProcessingException {
+                                                         @RequestParam(required = false) String sort,
+                                                         @RequestParam(required = false) String filter) throws JsonProcessingException {
         System.out.println("Page: " + page);
         System.out.println("Limit: " + limit);
         System.out.println("Sort: " + sort);
+        System.out.println("Filter: " + filter);
 
+        // Sort
         List<SortParam> sortParamList = new ArrayList<>();
         if (sort != null) {
             sortParamList = Arrays.asList(objectMapper.readValue(sort, SortParam[].class));
@@ -86,17 +82,22 @@ public class CommonController {
             orders.add(order);
         }
 
-        List<PersonnelEntity> personnelList = personnelRepository.findAll(PageRequest.of(page - 1, limit, Sort.by(orders)));
+        // Filter
+        List<FilterParam> filterParamList = new ArrayList<>();
+        if (filter != null) {
+            filterParamList = Arrays.asList(objectMapper.readValue(filter, FilterParam[].class));
+        }
+
+        PersonnelSpecification personnelSpecification = new PersonnelSpecification(filterParamList);
+        Page<PersonnelEntity> personnelEntityPage = personnelRepository.findAll(Specification.where(personnelSpecification), PageRequest.of(page - 1, limit, Sort.by(orders)));
         ResultsResponse<PersonnelEntity> resultsResponse = new ResultsResponse<>();
-        resultsResponse.getResults().addAll(personnelList);
+        resultsResponse.getResults().addAll(personnelEntityPage.getContent());
         resultsResponse.setCount(personnelRepository.count());
         return resultsResponse;
     }
 
     @PostMapping(value = "/personnel")
     public ResponseEntity<String> postPersonnel(@RequestBody PersonnelEntity source) {
-//        source.id = 99999L;
-
         Optional<PersonnelEntity> targetOptional = personnelRepository.findById(source.id);
         if (!targetOptional.isPresent()) {
             System.err.println("Error: User (" + source.id + ") not exists!");
@@ -126,5 +127,20 @@ public class CommonController {
 
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
+
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setPersonnelRepository(PersonnelRepository personnelRepository) {
+        this.personnelRepository = personnelRepository;
     }
 }

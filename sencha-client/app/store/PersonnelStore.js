@@ -21,5 +21,7 @@ Ext.define('Sencha.classic.store.PersonnelStore', {
     sorters: [{
         property: 'id',
         direction: 'ASC'
-    }]
+    }],
+
+    remoteFilter: true // Фильтровать на стороне сервера
 });

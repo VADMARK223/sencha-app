@@ -6,6 +6,7 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
     extend: 'Ext.grid.Panel',
     xtype: 'personnel-grid-view',
     requires: [
+        'Sencha.classic.view.common.HBoxPane',
         'Sencha.classic.view.pages.personnel.grid.ViewModel'
     ],
     viewModel: 'personnelGrid-view-model',
@@ -30,12 +31,18 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
             text: 'Last name',
             dataIndex: 'lastname',
             flex: 2,
-            editor: 'textfield'
+            editor: 'textfield',
+            filter: {
+                type: 'string'
+            }
         }, {
             text: 'First name',
             dataIndex: 'firstname',
             flex: 2,
-            editor: 'textfield'
+            editor: 'textfield',
+            filter: {
+                type: 'string'
+            }
         }, {
             text: 'Patronymic',
             dataIndex: 'patronymic',
@@ -65,13 +72,33 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
         }, {
             text: 'Actual',
             dataIndex: 'actual',
-            flex: 1
+            flex: 1,
+            filter: {
+                type: 'list',
+                options: ['Да', 'Нет']
+            }
         }, {
             text: 'Salary',
             dataIndex: 'salaryValue',
             flex: 1,
             editor: 'textfield',
             hidden: true
+        }]
+    },
+
+    tbar: {
+        xtype: 'hbox-pane',
+        defaults: {
+            hidden: true,
+        },
+
+        items: [{
+            xtype: 'textfield',
+            fieldLabel: 'Last name'
+        }, {
+            xtype: 'button',
+            text: 'Apply',
+            handler: 'onApplyBtnHandler'
         }]
     },
 
@@ -83,10 +110,12 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
     },
 
     selModel: 'rowmodel',
-    plugins: {
+    plugins: [{
+        ptype: 'gridfilters'
+    }, {
         ptype: 'rowediting',
         clicksToEdit: 2 // Количество кликов для начала редактирования
-    },
+    }],
 
     listeners: {
         viewready: function (grid) {

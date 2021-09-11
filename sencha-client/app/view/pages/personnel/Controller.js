@@ -16,4 +16,8 @@ Ext.define('Sencha.classic.view.pages.personnel.Controller', {
             vm.set('address', record.get('address'));
         }
     },
+
+    onApplyBtnHandler: function () {
+        console.log('AAAAAAAAAAAAAA');
+    }
 });
