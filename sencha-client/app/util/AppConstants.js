@@ -5,5 +5,5 @@
 Ext.define('Sencha.classic.util.AppConstants', {
     alternateClassName: ['Constants'],
     singleton: true,
-    allowAutoLogin: true
+    allowAutoLogin: false
 });
