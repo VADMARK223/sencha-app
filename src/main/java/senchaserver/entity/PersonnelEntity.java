@@ -47,4 +47,7 @@ public class PersonnelEntity {
 
     @Column(name = "position")
     public String position;
+
+    @Column(name = "code")
+    public Integer code;
 }

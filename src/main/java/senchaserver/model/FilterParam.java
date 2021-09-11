@@ -9,12 +9,6 @@ import lombok.Data;
 @Data
 public class FilterParam {
     public String property; // Название поля
-    public String operator; // Оператор, к примеру like
+    private FilterOperator operator; // Оператор, к примеру like
     public Object value; // Значение
-
-    public FilterParam(String property, String operator, Object value) {
-        this.property = property;
-        this.operator = operator;
-        this.value = value;
-    }
 }

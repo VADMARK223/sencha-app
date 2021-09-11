@@ -28,6 +28,15 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
             flex: 1,
             editor: 'textfield'
         }, {
+            text: 'Code',
+            dataIndex: 'code',
+            flex: 1,
+            editor: 'textfield',
+            filter: {
+                type: 'list',
+                options: ['1', '2', '3']
+            }
+        }, {
             text: 'Last name',
             dataIndex: 'lastname',
             flex: 2,
@@ -57,7 +66,11 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
             text: 'Position',
             dataIndex: 'position',
             flex: 1,
-            editor: 'textfield'
+            editor: 'textfield',
+            filter: {
+                type: 'list',
+                options: ['Старший разработчик', 'Ведущий разработчик']
+            }
         }, {
             text: 'Phone',
             dataIndex: 'phone',
@@ -75,7 +88,7 @@ Ext.define('Sencha.classic.view.pages.personnel.grid.View', {
             flex: 1,
             filter: {
                 type: 'list',
-                options: ['Да', 'Нет']
+                options: ['true', 'false']
             }
         }, {
             text: 'Salary',

@@ -53,6 +53,10 @@ Ext.define('Sencha.classic.model.Personnel', {
         {
             name: 'position',
             type: 'string'
+        },
+        {
+            name: 'code',
+            type: 'int'
         }
     ],
 

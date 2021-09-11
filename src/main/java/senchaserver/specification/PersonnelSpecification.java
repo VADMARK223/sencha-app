@@ -38,11 +38,39 @@ public class PersonnelSpecification implements Specification<PersonnelEntity> {
         return predicates;
     }
 
+    @SuppressWarnings("unchecked")
     private Predicate buildPredicate(FilterParam condition, Root<PersonnelEntity> root, CriteriaBuilder criteriaBuilder) {
-        if (condition.operator.equalsIgnoreCase("like")) {
-            return criteriaBuilder.like(root.get(condition.property), "%" + condition.value + "%");
+        switch (condition.getOperator()) {
+            case LIKE:
+                return criteriaBuilder.like(root.get(condition.property), "%" + condition.value + "%");
+            case IN:
+                System.out.println("condition: " + condition.value);
+                System.out.println("fieldType: " + root.get(condition.property).getJavaType());
 
+                Class<?> fieldType = root.get(condition.property).getJavaType();
+                return criteriaBuilder.in(root.get(condition.property)).value(castToRequiredType(fieldType, (List<String>) condition.value));
+            default:
+                throw new RuntimeException("Operation not supported yet.");
         }
-        return null;
+    }
+
+    private Object castToRequiredType(Class<?> fieldType, List<String> values) {
+        List<Object> result = new ArrayList<>();
+        for (String value : values) {
+            result.add(castToRequiredType(fieldType, value));
+        }
+        return result;
+    }
+
+    private Object castToRequiredType(Class<?> fieldType, String value) {
+        if (fieldType.isAssignableFrom(String.class)) {
+            return value;
+        } else if (fieldType.isAssignableFrom(Boolean.class)) {
+            return Boolean.valueOf(value);
+        } else if (fieldType.isAssignableFrom(Integer.class)) {
+            return Integer.valueOf(value);
+        } else {
+            throw new RuntimeException("Field type '" + fieldType + "' not supported yet.");
+        }
     }
 }
