@@ -89,10 +89,11 @@ public class CommonController {
         }
 
         PersonnelSpecification personnelSpecification = new PersonnelSpecification(filterParamList);
-        Page<PersonnelEntity> personnelEntityPage = personnelRepository.findAll(Specification.where(personnelSpecification), PageRequest.of(page - 1, limit, Sort.by(orders)));
+        Specification<PersonnelEntity> specification = Specification.where(personnelSpecification);
+        Page<PersonnelEntity> personnelEntityPage = personnelRepository.findAll(specification, PageRequest.of(page - 1, limit, Sort.by(orders)));
         ResultsResponse<PersonnelEntity> resultsResponse = new ResultsResponse<>();
         resultsResponse.getResults().addAll(personnelEntityPage.getContent());
-        resultsResponse.setCount(personnelRepository.count());
+        resultsResponse.setCount(personnelEntityPage.getTotalElements());
         return resultsResponse;
     }
 
