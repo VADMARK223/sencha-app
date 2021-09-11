@@ -1,0 +1,13 @@
+{
+    "curly": true,
+    "forin": false,
+    "nocomma": true,
+    "predef": ["Ext", "console", "window", "document", "navigator", "Sencha", "GENDER", "Constants"],
+    "undef": true,
+    "shadow": "outer",
+    "unused": true,
+    "eqeqeq": true,
+    "eqnull": true,
+    "es3": false,
+    "esversion": 6 // Разрешить const
+}

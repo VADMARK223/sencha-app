@@ -1,0 +1,31 @@
+body {
+  background-image: url(bg-2.jpg) !important;
+}
+
+.toast-icon {
+  background-image: url(warning.svg) !important;
+}
+
+.x-grid-row-green {
+  color: green !important;
+}
+
+.x-grid-row-gray {
+  color: gray !important;
+}
+
+/* Icons */
+.fa, .x-fa {
+  &.red {
+    color: #de350b;
+  }
+  &.orange {
+    color: #ffc400;
+  }
+  &.green {
+    color: #00875a;
+  }
+  &.blue {
+    color: #0052cc;
+  }
+}
