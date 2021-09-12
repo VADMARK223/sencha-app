@@ -4,10 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import senchaserver.entity.PersonnelEntity;
 import senchaserver.model.FilterParam;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,15 +37,19 @@ public class PersonnelSpecification implements Specification<PersonnelEntity> {
 
     @SuppressWarnings("unchecked")
     private Predicate buildPredicate(FilterParam condition, Root<PersonnelEntity> root, CriteriaBuilder criteriaBuilder) {
+        final String property = condition.getProperty();
+        final Object value = condition.getValue();
+
         switch (condition.getOperator()) {
             case LIKE:
-                return criteriaBuilder.like(root.get(condition.property), "%" + condition.value + "%");
+                return criteriaBuilder.like(root.get(property), "%" + value + "%");
             case IN:
-                System.out.println("condition: " + condition.value);
-                System.out.println("fieldType: " + root.get(condition.property).getJavaType());
+                final Path<Object> propertyPath = root.get(property);
+                System.out.println("condition: " + value);
+                System.out.println("fieldType: " + propertyPath.getJavaType());
 
-                Class<?> fieldType = root.get(condition.property).getJavaType();
-                return criteriaBuilder.in(root.get(condition.property)).value(castToRequiredType(fieldType, (List<String>) condition.value));
+                Class<?> fieldType = propertyPath.getJavaType();
+                return criteriaBuilder.in(propertyPath).value(castToRequiredType(fieldType, (List<String>) value));
             default:
                 throw new RuntimeException("Operation not supported yet.");
         }

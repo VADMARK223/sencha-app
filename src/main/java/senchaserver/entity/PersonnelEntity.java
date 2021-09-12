@@ -6,16 +6,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Сущность сотрудника
+ *
  * @author Markitanov Vadim
  * @since 07.09.2021
  */
 @Data
 @Entity(name = "personnel")
-public class PersonnelEntity {
+public class PersonnelEntity implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")

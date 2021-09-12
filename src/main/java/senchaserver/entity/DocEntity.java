@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author Markitanov Vadim
@@ -12,7 +13,7 @@ import javax.persistence.*;
  */
 @Data
 @Entity(name = "docs")
-public class DocEntity {
+public class DocEntity implements Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")

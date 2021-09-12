@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class FilterParam {
-    public String property; // Название поля
+    private String property; // Название поля
     private FilterOperator operator; // Оператор, к примеру like
-    public Object value; // Значение
+    private Object value; // Значение
 }
