@@ -26,4 +26,9 @@ public class RoleEntity implements Serializable {
     @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<UserEntity> users;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -5,12 +5,14 @@ Ext.define('Sencha.classic.Application', {
 
     requires: [
         'Sencha.classic.view.main.View',
-        'Sencha.classic.view.login.View'
+        'Sencha.classic.view.login.View',
+        'Sencha.classic.util.AppConstants'
     ],
 
     launch: function () {
         Ext.getDoc().dom.title = 'Sencha classic demo';
-        this.setupMainView(true);
+        var token = sessionStorage.getItem(Constants.userToken);
+        this.setupMainView(Ext.isEmpty(token));
     },
 
     setupMainView: function (showLogin) {
@@ -23,7 +25,8 @@ Ext.define('Sencha.classic.Application', {
     },
 
     onLoginClose: function () {
-        this.setMainView('Sencha.classic.view.main.View');
+        window.location.reload();
+        // this.setMainView('Sencha.classic.view.main.View');
     },
 
     quickTips: false,

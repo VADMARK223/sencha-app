@@ -1,4 +1,8 @@
 Ext.define('Sencha.classic.LoginManager', {
+    requires: [
+        'Sencha.classic.util.AppConstants'
+    ],
+
     config: {
         url: null
     },
@@ -22,6 +26,8 @@ Ext.define('Sencha.classic.LoginManager', {
         options = options.original;
 
         if (success) {
+            sessionStorage.setItem(Constants.userToken, response.responseText);
+
             Ext.callback(options.success, options.scope);
         } else {
             Ext.callback(options.failure, options.scope, [response.responseText]);

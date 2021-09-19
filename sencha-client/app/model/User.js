@@ -7,6 +7,7 @@ Ext.define('Sencha.classic.model.User', {
     extend: 'Sencha.classic.model.Base',
 
     requires: [
+        'Sencha.classic.util.AppConstants',
         'Sencha.classic.model.enum.Gender'
     ],
 
@@ -83,7 +84,7 @@ Ext.define('Sencha.classic.model.User', {
                     return false;
                 }
 
-                return Ext.Array.contains(Ext.pluck(roles, 'id'), 1);
+                return Ext.Array.contains(Ext.pluck(roles, 'name'), Constants.ADMIN_ROLE);
             }
         }
     ],

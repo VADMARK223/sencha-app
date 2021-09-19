@@ -6,11 +6,6 @@ Ext.define('Sencha.classic.view.main.View', {
         'Sencha.classic.view.navigation.View'
     ],
 
-    // Альтернатива создания отдельного класса контроллера
-    /*controller: {
-        <functions>
-    },*/
-
     keyMap: {
         SPACE: 'onKeyMapSpace'
     },
@@ -21,6 +16,36 @@ Ext.define('Sencha.classic.view.main.View', {
     },
 
     items: [{
+        xtype: 'hbox-pane',
+        defaults: {
+            margin: 5
+        },
+        items: [{
+            xtype: 'button',
+            text: 'Sing out',
+            handler: 'onSingOutHandler'
+        }, {
+            xtype: 'button',
+            text: 'Clear cache',
+            handler: 'onClearCacheHandler'
+        }, {
+            xtype: 'textfield',
+            reference: 'token-textfield-ref',
+            fieldLabel: 'Token',
+            labelWidth: 40,
+            readOnly: true,
+            editable: false,
+            selectOnFocus: true,
+            bind: {
+                value: '{token}'
+            },
+            listeners: {
+                render: function () {
+                    this.getEl().on('click', 'onTokenTextfieldClickHandler');
+                }
+            }
+        }]
+    }, {
         xtype: 'navigation-view'
     }]
 });

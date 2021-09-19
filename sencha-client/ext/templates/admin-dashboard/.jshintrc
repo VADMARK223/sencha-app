@@ -2,7 +2,7 @@
     "curly": true,
     "forin": false,
     "nocomma": true,
-    "predef": ["Ext", "console", "window", "document", "navigator", "Sencha", "GENDER", "Constants"],
+    "predef": ["Ext", "console", "window", "document", "navigator", "Sencha", "GENDER", "Constants", "localStorage", "sessionStorage"],
     "undef": true,
     "shadow": "outer",
     "unused": true,

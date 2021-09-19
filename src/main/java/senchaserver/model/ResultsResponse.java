@@ -13,4 +13,5 @@ import java.util.List;
 public class ResultsResponse<T> {
     private List<T> results = new ArrayList<>();
     private Long count;
+    private String err;
 }

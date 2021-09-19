@@ -24,8 +24,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean authenticate(String username, String password) {
-        return userRepository.findAllByUsernameAndPassword(username, password) != null;
+    public UserEntity authenticate(String username, String password) {
+        return userRepository.findAllByUsernameAndPassword(username, password);
     }
 
     @Autowired

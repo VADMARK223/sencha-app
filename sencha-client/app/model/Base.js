@@ -22,11 +22,21 @@ Ext.define('Sencha.classic.model.Base', {
             type: 'ajax', // Можно не указывать, тип ajax по умолчанию
             url: '{prefix}/{entityName:uncapitalize}', // prefix задается в свойстве urlPrefix, entityName - название модели (uncapitalize убирает заглавные буквы с первой буквы данной строки)
 
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem(Constants.userToken)
+            },
+
             listeners: {
                 exception: function (proxy, response) {
+                    var msg;
+                    if (!Ext.isEmpty(response.responseJson) && !Ext.isEmpty(response.responseJson.err)) {
+                        msg = Ext.String.format('{0}', response.responseJson.err);
+                    } else {
+                        msg = Ext.String.format('Error: {0}. See server logs.', response.status);
+                    }
                     Ext.MessageBox.show({
                         title: 'Server error',
-                        msg: Ext.String.format('Error: {0}. See server logs.', response.status),
+                        msg: msg,
                         icon: Ext.MessageBox.ERROR,
                         buttons: Ext.Msg.OK
                     });
