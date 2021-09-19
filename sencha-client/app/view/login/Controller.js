@@ -6,7 +6,6 @@ Ext.define('Sencha.classic.view.login.Controller', {
         'Sencha.classic.util.AppConstants'
     ],
 
-
     loginText: 'Logging in ....',
 
     // Вызывается перед инициализацией представления. Это вызывается до вызова метода initComponent представления.
@@ -105,7 +104,7 @@ Ext.define('Sencha.classic.view.login.Controller', {
                 if (!this.loginManager) {
                     this.loginManager = new Sencha.classic.LoginManager(
                         {
-                            url: 'http://localhost:8080/authenticate'
+                            url: Constants.urlPrefix + '/authenticate'
                         }
                     );
                 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Markitanov Vadim
@@ -43,4 +44,12 @@ public class UserEntity implements Serializable {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     public List<DocEntity> docs;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<RoleEntity> roles;
 }

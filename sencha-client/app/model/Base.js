@@ -2,7 +2,8 @@ Ext.define('Sencha.classic.model.Base', {
     extend: 'Ext.data.Model', // Модель или сущность представляют собой некоторый объект, которым управляет ваше приложение
 
     requires: [
-        'Ext.data.identifier.Uuid' // Этот класс генерирует UUID в соответствии с RFC 4122. Этот класс имеет свойство id по умолчанию. Это означает, что используется один экземпляр, если свойство id не переопределено.
+        'Ext.data.identifier.Uuid', // Этот класс генерирует UUID в соответствии с RFC 4122. Этот класс имеет свойство id по умолчанию. Это означает, что используется один экземпляр, если свойство id не переопределено.
+        'Sencha.classic.util.AppConstants'
     ],
 
     fields: [{
@@ -16,7 +17,7 @@ Ext.define('Sencha.classic.model.Base', {
 
     schema: {
         namespace: 'Sencha.classic.model',
-        urlPrefix: 'http://localhost:8080',
+        urlPrefix: Constants.urlPrefix,
         proxy: {
             type: 'ajax', // Можно не указывать, тип ajax по умолчанию
             url: '{prefix}/{entityName:uncapitalize}', // prefix задается в свойстве urlPrefix, entityName - название модели (uncapitalize убирает заглавные буквы с первой буквы данной строки)

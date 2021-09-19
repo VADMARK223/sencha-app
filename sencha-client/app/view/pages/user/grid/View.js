@@ -29,6 +29,12 @@ Ext.define('Sencha.classic.view.pages.user.grid.View', {
             flex: 1
             // tdCls:
         }, {
+            text: 'Roles',
+            dataIndex: 'rolesValues'
+        }, {
+            text: 'Is admin',
+            dataIndex: 'isAdmin'
+        }, {
             text: 'First name',
             dataIndex: 'firstname',
             flex: 1,

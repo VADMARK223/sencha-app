@@ -38,14 +38,20 @@ Ext.define('Sencha.classic.view.pages.user.grid.Controller', {
                     if (target.classList.contains('fa')) {
                         var data = view.getRecord(target.parentNode).getData(); // Забираем данные с записи для прокидки в шаблон
 
+                        if (target.classList.contains('isAdmin')) { // В классах иконки ищем нужный
+                            data.tooltipText = 'Admin'; // Устанавливаем текст всплывающего окна
+                            me.update(Ext.create('Sencha.classic.view.pages.user.grid.UsernameTooltip').apply(data)); // Обновляем контент всплывающего окна
+                            return;
+                        }
+
                         if (target.classList.contains('actualUser')) { // В классах иконки ищем нужный
-                            data.tooltipText = 'Актуальный пользователь'; // Устанавливаем текст всплывающего окна
+                            data.tooltipText = 'Actual user'; // Устанавливаем текст всплывающего окна
                             me.update(Ext.create('Sencha.classic.view.pages.user.grid.UsernameTooltip').apply(data)); // Обновляем контент всплывающего окна
                             return;
                         }
 
                         if (target.classList.contains('notActualUser')) { // В классах иконки ищем нужный
-                            data.tooltipText = 'Неактуальный пользователь'; // Устанавливаем текст всплывающего окна
+                            data.tooltipText = 'Not actual user'; // Устанавливаем текст всплывающего окна
                             me.update(Ext.create('Sencha.classic.view.pages.user.grid.UsernameTooltip').apply(data));  // Обновляем контент всплывающего окна
                             return;
                         }

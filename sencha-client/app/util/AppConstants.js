@@ -5,5 +5,6 @@
 Ext.define('Sencha.classic.util.AppConstants', {
     alternateClassName: ['Constants'],
     singleton: true,
-    allowAutoLogin: true
+    allowAutoLogin: false,
+    urlPrefix: 'http://localhost:8080'
 });

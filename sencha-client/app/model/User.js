@@ -55,16 +55,54 @@ Ext.define('Sencha.classic.model.User', {
             name: 'actual', // Признак актуальности пользователя
             type: 'boolean',
             defaultValue: true
+        }, {
+            name: 'rolesValues',
+            type: 'auto',
+            mapping: 'roles',
+            persist: false, // Не отсылать виртуальное поля на сервер
+            convert: function (roles) {
+                if (Ext.isEmpty(roles)) {
+                    return;
+                }
+
+                var values = [];
+                Ext.each(roles, function (role) {
+                    var roleName = role.name;
+                    values.push(roleName.charAt(0));
+                });
+
+                return values;
+            }
+        }, {
+            name: 'isAdmin',
+            type: 'boolean',
+            mapping: 'roles',
+            persist: false, // Не отсылать виртуальное поля на сервер
+            convert: function (roles) {
+                if (Ext.isEmpty(roles)) {
+                    return false;
+                }
+
+                return Ext.Array.contains(Ext.pluck(roles, 'id'), 1);
+            }
         }
     ],
 
-    hasMany: {
-        model: 'Sencha.classic.model.Doc',
-        name: 'docs',
-        associationKey: 'docs',
-        getterName: 'getDocs',
-        setterName: 'setDocs'
-    },
+    hasMany: [
+        {
+            model: 'Sencha.classic.model.Doc',
+            name: 'docs',
+            associationKey: 'docs',
+            getterName: 'getDocs',
+            setterName: 'setDocs'
+        }, {
+            model: 'Sencha.classic.model.Role',
+            name: 'roles',
+            associationKey: 'roles',
+            getterName: 'getRoles',
+            setterName: 'setRoles'
+        }
+    ],
 
     validators: {
         gender: {

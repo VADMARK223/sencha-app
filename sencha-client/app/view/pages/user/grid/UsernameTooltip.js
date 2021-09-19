@@ -14,10 +14,8 @@ Ext.define('Sencha.classic.view.pages.user.grid.UsernameTooltip', {
             disableFormats: true
         }
     ],
-    constructor: function(config) {
-        console.log('config', config);
+    constructor: function() {
         var self = this;
-        // Ext.apply(self, config);
         self.callParent(self.cardTpl);
     }
 });

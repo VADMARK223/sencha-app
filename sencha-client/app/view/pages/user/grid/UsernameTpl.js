@@ -9,6 +9,9 @@ Ext.define('Sencha.classic.view.pages.user.grid.UsernameTpl', {
     cardTpl: [
         '<div class="{[this.baseClass]}">',
         '{username}',
+
+        '<tplif="values.isAdmin"><div class="icons"><i class="fa fa-user-circle red isAdmin"></i></div></tpl>',
+
         '<tpl if="values.actual">',
             '<div class="icons"><i class="fa fa-check-circle green actualUser"></i></div>',
         '<tpl else>',

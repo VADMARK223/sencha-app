@@ -21,7 +21,6 @@ public class UserService {
 
     @Cacheable
     public List<UserEntity> getUsersList() {
-        System.out.println("Get users!");
         return userRepository.findAll();
     }
 
